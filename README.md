@@ -1,0 +1,2 @@
+# traductor-manhwa
+traductor-manhwa
