@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traductor de Manhwas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      color: #333;
+      margin: 0;
+      padding: 2rem;
+      text-align: center;
+    }
+    h1 {
+      color: #2b2b2b;
+    }
+    input {
+      width: 80%;
+      padding: 10px;
+      margin-top: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #resultado {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      text-align: left;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Traductor de Manhwas</h1>
+  <p>Pega el enlace del manhwa que estás leyendo:</p>
+  <input type="text" id="url" placeholder="Ejemplo: https://asuratoon.com/manga/...">
+  <br>
+  <button onclick="traducir()">Traducir al español</button>
+  <div id="resultado"></div>
+
+  <script>
+    async function traducir() {
+      const url = document.getElementById('url').value.trim();
+      const resultado = document.getElementById('resultado');
+      resultado.innerText = "Analizando la página, por favor espera...";
+
+      try {
+        const respuesta = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+        const data = await respuesta.json();
+        const texto = data.contents.replace(/<[^>]*>?/gm, ' ').slice(0, 5000);
+
+        const traducido = `
+          <iframe src="https://translate.google.com/?sl=auto&tl=es&text=${encodeURIComponent(texto)}&op=translate" width="100%" height="400"></iframe>
+        `;
+        resultado.innerHTML = traducido;
+      } catch (error) {
+        resultado.innerText = "No se pudo analizar o traducir la página. Intenta con otro link.";
+      }
+    }
+  </script>
+</body>
+</html>
